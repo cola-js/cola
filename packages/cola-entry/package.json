@@ -1,5 +1,5 @@
 {
-  "name": "@cola/entry",
+  "name": "@cola-js/entry",
   "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
