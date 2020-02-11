@@ -1,0 +1,35 @@
+{
+  "name": "@cola/entry",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cola-js/cola.git"
+  },
+  "keywords": [
+    "cola",
+    "vue",
+    "miniprogram"
+  ],
+  "files": [
+    "lib"
+  ],
+  "author": "Jony",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cola-js/cola/issues"
+  },
+  "homepage": "https://github.com/cola-js/cola#readme",
+  "dependencies": {
+    "babel-generator": "^6.26.1",
+    "babelon": "^1.0.5",
+    "js-yaml": "^3.13.1",
+    "json5": "^2.1.0"
+  }
+}
