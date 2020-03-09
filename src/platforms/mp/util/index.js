@@ -1,0 +1,89 @@
+/* @flow */
+import { makeMap } from 'shared/util'
+import { isDef } from 'core/util/index'
+
+export * from './class'
+export * from './throttle'
+export * from './aop'
+export * from './buffer'
+export * from './platform'
+export * from './vars'
+
+export const notEmpty = e => !!e
+export const isPreTag = (tag) => tag === 'pre'
+
+export const isHTMLTag = makeMap(
+  'html,body,base,head,link,meta,style,title,' +
+  'address,article,aside,footer,header,h1,h2,h3,h4,h5,h6,hgroup,nav,section,' +
+  'div,dd,dl,dt,figcaption,figure,picture,hr,img,li,main,ol,p,pre,ul,' +
+  'a,b,abbr,bdi,bdo,br,cite,code,data,dfn,em,i,kbd,mark,q,rp,rt,rtc,ruby,' +
+  's,samp,small,span,strong,sub,sup,time,u,var,wbr,area,audio,map,track,video,' +
+  'embed,object,param,source,canvas,script,noscript,del,ins,' +
+  'caption,col,colgroup,table,thead,tbody,td,th,tr,' +
+  'button,datalist,fieldset,form,input,label,legend,meter,optgroup,option,' +
+  'output,progress,select,textarea,' +
+  'details,dialog,menu,menuitem,summary,' +
+  'content,element,shadow,template,blockquote,iframe,tfoot'
+)
+
+export const isReservedTag = (tag: string): ?boolean => {
+  return isHTMLTag(tag)
+}
+
+// these are reserved for web because they are directly compiled away
+// during template compilation
+export const isReservedAttr = makeMap('style,class')
+
+// Elements that you can, intentionally, leave open (and which close themselves)
+// more flexable than web
+export const canBeLeftOpenTag = makeMap(
+  'web,spinner,switch,video,textarea,canvas,' +
+  'indicator,marquee,countdown',
+  true
+)
+
+export const isUnaryTag = makeMap(
+  'embed,img,image,input,link,meta',
+  true
+)
+
+export function mustUseProp () { /* console.log('mustUseProp') */ }
+export function getTagNamespace () { /* console.log('getTagNamespace') */ }
+export function isUnknownElement () { /* console.log('isUnknownElement') */ }
+
+export const eventTypeMap = {
+  tap: ['tap', 'click'],
+  begin: ['regionchange'],
+  end: ['regionchange']
+}
+
+export function getValue (obj = {}, path = '') {
+  const paths = typeof path === 'string' ? path.split('.') : path
+  return paths.reduce((prev, k) => {
+    /* istanbul ignore if */
+    if (prev && isDef(prev)) {
+      prev = prev[k]
+    }
+    return prev
+  }, obj)
+}
+
+export function deepEqual (a, b) {
+  const aType = typeof a
+  const bType = typeof b
+  if (aType !== 'object' || bType !== 'object' || aType !== bType) {
+    return a === b
+  } else {
+    if (Array.isArray(a)) {
+      if (a.length !== b.length) {
+        return false
+      }
+    }
+    for (const k in a) {
+      if (!deepEqual(a[k], b[k])) {
+        return false
+      }
+    }
+  }
+  return true
+}

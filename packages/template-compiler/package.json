@@ -1,0 +1,21 @@
+{
+  "name": "@cola-js/template-compiler",
+  "version": "0.1.0",
+  "description": "Cola template compiler for Vue",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cola-js/cola-js.git"
+  },
+  "keywords": [
+    "vue",
+    "compiler",
+    "mp"
+  ],
+  "author": "zhj-fed",
+  "license": "MIT",
+  "dependencies": {
+    "he": "^1.1.0",
+    "de-indent": "^1.0.2"
+  }
+}
