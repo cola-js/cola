@@ -5,7 +5,11 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cola-js/cola-js.git"
+    "url": "https://github.com/cola-js/cola-js/tree/master/packages/template-compiler"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "keywords": [
     "vue",

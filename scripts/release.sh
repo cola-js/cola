@@ -33,7 +33,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
   # update packages
   # using subshells to avoid having to cd back
-  ( ( cd packages/vue-template-compiler
+  ( ( cd packages/template-compiler
   npm version "$VERSION"
   if [[ -z $RELEASE_TAG ]]; then
     npm publish
@@ -41,27 +41,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     npm publish --tag "$RELEASE_TAG"
   fi
   )
-
-  cd packages/vue-server-renderer
-  npm version "$VERSION"
-  if [[ -z $RELEASE_TAG ]]; then
-    npm publish
-  else
-    npm publish --tag "$RELEASE_TAG"
-  fi
   )
 
   # commit
   git add -A
   git add -f \
     dist/*.js \
-    packages/vue-server-renderer/basic.js \
-    packages/vue-server-renderer/build.dev.js \
-    packages/vue-server-renderer/build.prod.js \
-    packages/vue-server-renderer/server-plugin.js \
-    packages/vue-server-renderer/client-plugin.js \
-    packages/vue-template-compiler/build.js \
-    packages/vue-template-compiler/browser.js
+    packages/template-compiler/build.js \
   git commit -m "build: build $VERSION"
   # generate release note
   npm run release:note

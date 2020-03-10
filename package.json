@@ -1,7 +1,7 @@
 {
-  "name": "cola",
+  "name": "@cola-js/runtime",
   "version": "0.1.0",
-  "private": true,
+  "description": "Reactive, component-oriented view layer for modern web interfaces.",
   "sideEffects": false,
   "scripts": {
     "dev": "rollup -w -c scripts/config.js --environment TARGET:mp-runtime",
@@ -33,6 +33,10 @@
     "dist/*.js",
     "types/*.d.ts"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cola-js/cola-js.git"
@@ -106,7 +110,7 @@
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.0.0",
     "selenium-server": "^2.53.1",
-    "serialize-javascript": "^1.3.0",
+    "serialize-javascript": "^2.1.0",
     "shelljs": "^0.8.1",
     "terser": "^3.10.2",
     "typescript": "^3.1.3",

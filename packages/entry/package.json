@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cola-js/cola-js.git"
+    "url": "https://github.com/cola-js/cola-js/tree/master/packages/entry"
   },
   "keywords": [
     "cola",
@@ -20,12 +20,8 @@
   "files": [
     "lib"
   ],
-  "author": "Jony",
+  "author": "zhj-fed",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cola-js/cola-js/issues"
-  },
-  "homepage": "https://github.com/cola-js/cola-js#readme",
   "dependencies": {
     "babel-generator": "^6.26.1",
     "babelon": "^1.0.5",

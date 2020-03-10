@@ -10,10 +10,10 @@ try {
 } catch (e) {}
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Vue = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('weex/runtime/recycle-list/render-component-template')) :
+  typeof define === 'function' && define.amd ? define(['weex/runtime/recycle-list/render-component-template'], factory) :
+  (global = global || self, global.Vue = factory(global.renderComponentTemplate));
+}(this, (function (renderComponentTemplate) { 'use strict';
 
   /*  */
 
@@ -2580,186 +2580,6 @@ try {
 
   /*  */
 
-  var RECYCLE_LIST_MARKER = '@inRecycleList';
-
-  // Register the component hook to weex native render engine.
-  // The hook will be triggered by native, not javascript.
-  function registerComponentHook (
-    componentId,
-    type, // hook type, could be "lifecycle" or "instance"
-    hook, // hook name
-    fn
-  ) {
-    if (!document || !document.taskCenter) {
-      return
-    }
-    if (typeof document.taskCenter.registerHook === 'function') {
-      return document.taskCenter.registerHook(componentId, type, hook, fn)
-    }
-  }
-
-  // Updates the state of the component to weex native render engine.
-  function updateComponentData (
-    componentId,
-    newData,
-    callback
-  ) {
-    if (!document || !document.taskCenter) {
-      return
-    }
-    if (typeof document.taskCenter.updateData === 'function') {
-      return document.taskCenter.updateData(componentId, newData, callback)
-    }
-  }
-
-  /*  */
-
-  var uid$1 = 0;
-
-  // override Vue.prototype._init
-  function initVirtualComponent (options) {
-    if ( options === void 0 ) options = {};
-
-    var vm = this;
-    var componentId = options.componentId;
-
-    // virtual component uid
-    vm._uid = "virtual-component-" + (uid$1++);
-
-    // a flag to avoid this being observed
-    vm._isVue = true;
-    // merge options
-    if (options && options._isComponent) {
-      // optimize internal component instantiation
-      // since dynamic options merging is pretty slow, and none of the
-      // internal component options needs special treatment.
-      initInternalComponent(vm, options);
-    } else {
-      vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
-        options || {},
-        vm
-      );
-    }
-
-    /* istanbul ignore else */
-    {
-      vm._renderProxy = vm;
-    }
-
-    vm._self = vm;
-    initLifecycle(vm);
-    initEvents(vm);
-    initRender(vm);
-    callHook(vm, 'beforeCreate');
-    initInjections(vm); // resolve injections before data/props
-    initState(vm);
-    initProvide(vm); // resolve provide after data/props
-    callHook(vm, 'created');
-
-    // send initial data to native
-    var data = vm.$options.data;
-    var params = typeof data === 'function'
-      ? getData(data, vm)
-      : data || {};
-    if (isPlainObject(params)) {
-      updateComponentData(componentId, params);
-    }
-
-    registerComponentHook(componentId, 'lifecycle', 'attach', function () {
-      callHook(vm, 'beforeMount');
-
-      var updateComponent = function () {
-        vm._update(vm._vnode, false);
-      };
-      new Watcher(vm, updateComponent, noop, null, true);
-
-      vm._isMounted = true;
-      callHook(vm, 'mounted');
-    });
-
-    registerComponentHook(componentId, 'lifecycle', 'detach', function () {
-      vm.$destroy();
-    });
-  }
-
-  // override Vue.prototype._update
-  function updateVirtualComponent (vnode) {
-    var vm = this;
-    var componentId = vm.$options.componentId;
-    if (vm._isMounted) {
-      callHook(vm, 'beforeUpdate');
-    }
-    vm._vnode = vnode;
-    if (vm._isMounted && componentId) {
-      // TODO: data should be filtered and without bindings
-      var data = Object.assign({}, vm._data);
-      updateComponentData(componentId, data, function () {
-        callHook(vm, 'updated');
-      });
-    }
-  }
-
-  // listening on native callback
-  function resolveVirtualComponent (vnode) {
-    var BaseCtor = vnode.componentOptions.Ctor;
-    var VirtualComponent = BaseCtor.extend({});
-    var cid = VirtualComponent.cid;
-    VirtualComponent.prototype._init = initVirtualComponent;
-    VirtualComponent.prototype._update = updateVirtualComponent;
-
-    vnode.componentOptions.Ctor = BaseCtor.extend({
-      beforeCreate: function beforeCreate () {
-        // const vm: Component = this
-
-        // TODO: listen on all events and dispatch them to the
-        // corresponding virtual components according to the componentId.
-        // vm._virtualComponents = {}
-        var createVirtualComponent = function (componentId, propsData) {
-          // create virtual component
-          // const subVm =
-          new VirtualComponent({
-            componentId: componentId,
-            propsData: propsData
-          });
-          // if (vm._virtualComponents) {
-          //   vm._virtualComponents[componentId] = subVm
-          // }
-        };
-
-        registerComponentHook(cid, 'lifecycle', 'create', createVirtualComponent);
-      },
-      beforeDestroy: function beforeDestroy () {
-        delete this._virtualComponents;
-      }
-    });
-  }
-
-  /*  */
-
-  function isRecyclableComponent (vnode) {
-    return vnode.data.attrs
-      ? (RECYCLE_LIST_MARKER in vnode.data.attrs)
-      : false
-  }
-
-  function renderRecyclableComponentTemplate (vnode) {
-    // $flow-disable-line
-    delete vnode.data.attrs[RECYCLE_LIST_MARKER];
-    resolveVirtualComponent(vnode);
-    var vm = createComponentInstanceForVnode(vnode);
-    var render = (vm.$options)['@render'];
-    if (render) {
-      try {
-        return render.call(vm)
-      } catch (err) {
-        handleError(err, vm, "@render");
-      }
-    }
-  }
-
-  /*  */
-
   // inline hooks to be invoked on component VNodes during patch
   var componentVNodeHooks = {
     init: function init (vnode, hydrating) {
@@ -2924,8 +2744,8 @@ try {
     // extracting cell-slot template.
     // https://github.com/Hanks10100/weex-native-directive/tree/master/component
     /* istanbul ignore if */
-    if (__WEEX__ && isRecyclableComponent(vnode)) {
-      return renderRecyclableComponentTemplate(vnode)
+    if (__WEEX__ && renderComponentTemplate.isRecyclableComponent(vnode)) {
+      return renderComponentTemplate.renderRecyclableComponentTemplate(vnode)
     }
 
     return vnode
@@ -3913,7 +3733,7 @@ try {
 
 
 
-  var uid$2 = 0;
+  var uid$1 = 0;
 
   /**
    * A watcher parses an expression, collects dependencies,
@@ -3943,7 +3763,7 @@ try {
       this.deep = this.user = this.lazy = this.sync = false;
     }
     this.cb = cb;
-    this.id = ++uid$2; // uid for batching
+    this.id = ++uid$1; // uid for batching
     this.active = true;
     this.dirty = this.lazy; // for lazy watchers
     this.deps = [];
@@ -4363,13 +4183,13 @@ try {
 
   /*  */
 
-  var uid$3 = 0;
+  var uid$2 = 0;
 
   function initMixin (Vue) {
     Vue.prototype._init = function (options) {
       var vm = this;
       // a uid
-      vm._uid = uid$3++;
+      vm._uid = uid$2++;
 
       // a flag to avoid this being observed
       vm._isVue = true;

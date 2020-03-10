@@ -12,34 +12,34 @@ export default {
   'h6': 'view',
   'abbr': 'view',
   'address': 'view',
-  'b': 'view',
+  'b': 'text',
   'bdi': 'view',
   'bdo': 'view',
   'blockquote': 'view',
   'cite': 'view',
   'code': 'view',
-  'del': 'view',
+  'del': 'text',
   'ins': 'view',
   'dfn': 'view',
-  'em': 'view',
-  'strong': 'view',
+  'em': 'text',
+  'strong': 'text',
   'samp': 'view',
   'kbd': 'view',
   'var': 'view',
-  'i': 'view',
+  'i': 'text',
   'mark': 'view',
   'pre': 'view',
   'q': 'view',
   'ruby': 'view',
   'rp': 'view',
   'rt': 'view',
-  's': 'view',
-  'small': 'view',
-  'sub': 'view',
-  'sup': 'view',
-  'time': 'view',
-  'u': 'view',
-  'wbr': 'view',
+  's': 'text',
+  'small': 'text',
+  'sub': 'text',
+  'sup': 'text',
+  'time': 'text',
+  'u': 'text',
+  'wbr': 'text',
 
   // 表单元素
   'form': 'form',
@@ -69,9 +69,9 @@ export default {
   'video': 'video',
   'track': 'video',
   // 链接
-  'a': 'navigator',
+  'a': 'text',
   'nav': 'view',
-  'link': 'navigator',
+  'link': 'block',
   // 列表
   'ul': 'view',
   'ol': 'view',
@@ -97,9 +97,7 @@ export default {
   // 样式 节
   'div': 'view',
   'main': 'view',
-  span(config) {
-    return config.target === 'alipay' ? 'view' : 'label'
-  },
+  'span': 'text',
   'header': 'view',
   'footer': 'view',
   'section': 'view',
@@ -142,11 +140,18 @@ export default {
   'navigator': 'navigator',
   'image': 'image',
   'map': 'map',
-  'contact-button': 'contact-button',
   'block': 'block',
   'live-player': 'live-player',
   'live-pusher': 'live-pusher',
   'web-view': 'web-view',
   'open-data': 'open-data',
-  'official-account': 'official-account'
+  'official-account': function (config) {
+    return config.target === 'wechat' ? 'official-account' : 'text'
+  },
+  'lifestyle': function (config) {
+    return config.target === 'alipay' ? 'lifestyle' : 'text'
+  },
+  'contact-button': function (config) {
+    return config.target === 'alipay' ? 'contact-button' : 'text'
+  }
 }

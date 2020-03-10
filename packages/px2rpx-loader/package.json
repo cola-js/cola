@@ -1,0 +1,30 @@
+{
+  "name": "@cola-js/px2rpx-loader",
+  "version": "0.1.2",
+  "description": "css post loader for px2rpx",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --slow 2000"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cola-js/cola-js/tree/master/packages/px2rpx-loader"
+  },
+  "keywords": [
+    "webpack",
+    "loader"
+  ],
+  "author": "zhj-fed",
+  "license": "MIT",
+  "dependencies": {
+    "loader-utils": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "~3.0.0",
+    "mocha": "~2.2.5"
+  }
+}
