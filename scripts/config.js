@@ -91,6 +91,7 @@ function genConfig (name) {
 
   // built-in vars
   const vars = {
+    __WEEX__: false,
     __VERSION__: vueCoreVersion,
     __COLAJS_VERSION__: version
   }

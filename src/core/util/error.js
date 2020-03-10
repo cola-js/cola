@@ -2,7 +2,7 @@
 
 import config from '../config'
 import { warn } from './debug'
-import { inBrowser, inWeex } from './env'
+import { inBrowser } from './env'
 import { isPromise } from 'shared/util'
 
 export function handleError (err: Error, vm: any, info: string) {
@@ -64,7 +64,7 @@ function logError (err, vm, info) {
     warn(`Error in ${info}: "${err.toString()}"`, vm)
   }
   /* istanbul ignore else */
-  if ((inBrowser || inWeex) && typeof console !== 'undefined') {
+  if (inBrowser && typeof console !== 'undefined') {
     console.error(err)
   } else {
     throw err

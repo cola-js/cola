@@ -63,11 +63,7 @@ export function updateListeners (
     def = cur = on[name]
     old = oldOn[name]
     event = normalizeEvent(name)
-    /* istanbul ignore if */
-    if (__WEEX__ && isPlainObject(def)) {
-      cur = def.handler
-      event.params = def.params
-    }
+
     if (isUndef(cur)) {
       process.env.NODE_ENV !== 'production' && warn(
         `Invalid handler for event "${event.name}": got ` + String(cur),

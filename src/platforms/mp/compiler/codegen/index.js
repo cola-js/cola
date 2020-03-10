@@ -586,9 +586,7 @@ function genProps (props: Array<ASTAttr>, mode?: String): string {
 
   for (let i = 0; i < props.length; i++) {
     const prop = props[i]
-    const value = __WEEX__
-      ? generateValue(prop.value)
-      : transformSpecialNewlines(prop.value)
+    const value = transformSpecialNewlines(prop.value)
 
     if (
       (mode === 'attr' && !isComponent && bindings.indexOf(prop.name) === -1)

@@ -673,14 +673,12 @@ var hasProto = '__proto__' in {};
 
 // Browser environment sniffing
 var inBrowser = typeof window !== 'undefined';
-var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
-var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
 var UA = inBrowser && window.navigator.userAgent.toLowerCase();
 var isIE = UA && /msie|trident/.test(UA);
 var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
 var isEdge = UA && UA.indexOf('edge/') > 0;
-var isAndroid = (UA && UA.indexOf('android') > 0) || (weexPlatform === 'android');
-var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA)) || (weexPlatform === 'ios');
+var isAndroid = (UA && UA.indexOf('android') > 0);
+var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));
 var isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge;
 var isPhantomJS = UA && /phantomjs/.test(UA);
 var isFF = UA && UA.match(/firefox\/(\d+)/);
@@ -708,7 +706,7 @@ var _isServer;
 var isServerRendering = function () {
   if (_isServer === undefined) {
     /* istanbul ignore if */
-    if (!inBrowser && !inWeex && typeof global !== 'undefined') {
+    if (!inBrowser && typeof global !== 'undefined') {
       // detect presence of vue-server-renderer and avoid
       // Webpack shimming the process
       _isServer = global['process'] && global['process'].env.VUE_ENV === 'server';
@@ -3752,24 +3750,6 @@ function genHandlers (
   return res.slice(0, -1) + '}'
 }
 
-// Generate handler code with binding params on Weex
-/* istanbul ignore next */
-function genWeexHandler (params, handlerCode) {
-  var innerHandlerCode = handlerCode;
-  var exps = params.filter(function (exp) { return simplePathRE.test(exp) && exp !== '$event'; });
-  var bindings = exps.map(function (exp) { return ({ '@binding': exp }); });
-  var args = exps.map(function (exp, i) {
-    var key = "$_" + (i + 1);
-    innerHandlerCode = innerHandlerCode.replace(exp, key);
-    return key
-  });
-  args.push('$event');
-  return '{\n' +
-    "handler:function(" + (args.join(',')) + "){" + innerHandlerCode + "},\n" +
-    "params:" + (JSON.stringify(bindings)) + "\n" +
-    '}'
-}
-
 function genHandler (
   name,
   handler
@@ -3789,10 +3769,6 @@ function genHandler (
   if (!handler.modifiers) {
     if (isMethodPath || isFunctionExpression) {
       return handler.value
-    }
-    /* istanbul ignore next */
-    if (__WEEX__ && handler.params) {
-      return genWeexHandler(handler.params, handler.value)
     }
     return ("function($event){" + (handler.value) + "}") // inline statement
   } else {
@@ -3831,10 +3807,7 @@ function genHandler (
       : isFunctionExpression
         ? ("return (" + (handler.value) + ")($event)")
         : handler.value;
-    /* istanbul ignore next */
-    if (__WEEX__ && handler.params) {
-      return genWeexHandler(handler.params, code + handlerCode)
-    }
+
     return ("function($event){" + code + handlerCode + "}")
   }
 }
@@ -4419,9 +4392,7 @@ function genProps (props, mode) {
 
   for (var i = 0; i < props.length; i++) {
     var prop = props[i];
-    var value = __WEEX__
-      ? generateValue(prop.value)
-      : transformSpecialNewlines(prop.value);
+    var value = transformSpecialNewlines(prop.value);
 
     if (
       (mode === 'attr' && !isComponent && bindings.indexOf(prop.name) === -1)
@@ -4442,14 +4413,6 @@ function genProps (props, mode) {
   } else {
     return staticProps
   }
-}
-
-/* istanbul ignore next */
-function generateValue (value) {
-  if (typeof value === 'string') {
-    return transformSpecialNewlines(value)
-  }
-  return JSON.stringify(value)
 }
 
 // #3895, #4268

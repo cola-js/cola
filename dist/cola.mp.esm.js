@@ -10,10 +10,10 @@ try {
 } catch (e) {}
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('weex/runtime/recycle-list/render-component-template')) :
-  typeof define === 'function' && define.amd ? define(['weex/runtime/recycle-list/render-component-template'], factory) :
-  (global = global || self, global.Vue = factory(global.renderComponentTemplate));
-}(this, (function (renderComponentTemplate) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.Vue = factory());
+}(this, (function () { 'use strict';
 
   /*  */
 
@@ -525,14 +525,12 @@ try {
 
   // Browser environment sniffing
   var inBrowser = typeof window !== 'undefined';
-  var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
-  var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
   var UA = inBrowser && window.navigator.userAgent.toLowerCase();
   var isIE = UA && /msie|trident/.test(UA);
   var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
   var isEdge = UA && UA.indexOf('edge/') > 0;
-  var isAndroid = (UA && UA.indexOf('android') > 0) || (weexPlatform === 'android');
-  var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA)) || (weexPlatform === 'ios');
+  var isAndroid = (UA && UA.indexOf('android') > 0);
+  var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));
   var isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge;
   var isPhantomJS = UA && /phantomjs/.test(UA);
   var isFF = UA && UA.match(/firefox\/(\d+)/);
@@ -560,7 +558,7 @@ try {
   var isServerRendering = function () {
     if (_isServer === undefined) {
       /* istanbul ignore if */
-      if (!inBrowser && !inWeex && typeof global !== 'undefined') {
+      if (!inBrowser && typeof global !== 'undefined') {
         // detect presence of vue-server-renderer and avoid
         // Webpack shimming the process
         _isServer = global['process'] && global['process'].env.VUE_ENV === 'server';
@@ -1555,7 +1553,7 @@ try {
 
   function logError (err, vm, info) {
     /* istanbul ignore else */
-    if ((inBrowser || inWeex) && typeof console !== 'undefined') {
+    if (inBrowser && typeof console !== 'undefined') {
       console.error(err);
     } else {
       throw err
@@ -1750,11 +1748,7 @@ try {
       def = cur = on[name];
       old = oldOn[name];
       event = normalizeEvent(name);
-      /* istanbul ignore if */
-      if (__WEEX__ && isPlainObject(def)) {
-        cur = def.handler;
-        event.params = def.params;
-      }
+
       if (isUndef(cur)) ; else if (isUndef(old)) {
         if (isUndef(cur.fns)) {
           cur = on[name] = createFnInvoker(cur, vm);
@@ -2580,6 +2574,7 @@ try {
 
   /*  */
 
+
   // inline hooks to be invoked on component VNodes during patch
   var componentVNodeHooks = {
     init: function init (vnode, hydrating) {
@@ -2739,14 +2734,6 @@ try {
       { Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children },
       asyncFactory
     );
-
-    // Weex specific: invoke recycle-list optimized @render function for
-    // extracting cell-slot template.
-    // https://github.com/Hanks10100/weex-native-directive/tree/master/component
-    /* istanbul ignore if */
-    if (__WEEX__ && renderComponentTemplate.isRecyclableComponent(vnode)) {
-      return renderComponentTemplate.renderRecyclableComponentTemplate(vnode)
-    }
 
     return vnode
   }
@@ -5885,23 +5872,11 @@ try {
           : nodeOps.createElement(tag, vnode);
         setScope(vnode);
 
-        /* istanbul ignore if */
-        if (__WEEX__ && (isUndef(data) || isFalse(data.appendAsTree))) {
-          // in Weex, the default insertion order is parent-first.
-          // List items can be optimized to use children-first insertion
-          // with append="tree".
-          if (isDef(data)) {
-            invokeCreateHooks(vnode, insertedVnodeQueue);
-          }
-          insert(parentElm, vnode.elm, refElm);
-          createChildren(vnode, children, insertedVnodeQueue);
-        }else {
-          createChildren(vnode, children, insertedVnodeQueue);
-          if (isDef(data)) {
-            invokeCreateHooks(vnode, insertedVnodeQueue);
-          }
-          insert(parentElm, vnode.elm, refElm);
+        createChildren(vnode, children, insertedVnodeQueue);
+        if (isDef(data)) {
+          invokeCreateHooks(vnode, insertedVnodeQueue);
         }
+        insert(parentElm, vnode.elm, refElm);
       } else {
         vnode.elm = isTrue(vnode.isComment)
           ? nodeOps.createComment(vnode.text)
@@ -7543,7 +7518,7 @@ try {
 
   /*  */
 
-  Vue.megaloVersion = '0.1.0';
+  Vue.megaloVersion = '0.1.3';
 
   return Vue;
 

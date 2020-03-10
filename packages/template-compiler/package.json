@@ -1,8 +1,8 @@
 {
   "name": "@cola-js/template-compiler",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Cola template compiler for Vue",
-  "main": "index.js",
+  "main": "build.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/cola-js/cola-js/tree/master/packages/template-compiler"
