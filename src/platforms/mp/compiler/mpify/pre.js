@@ -26,6 +26,12 @@ export function mpify (node, options) {
     scopeId = ''
   } = options
   sep = `'${LIST_TAIL_SEPS[target]}'`
+  // 给页面根节点添加平台标识class
+  if (/\/pages\/[^_]+\.vue$/.test(options.realResourcePath)) {
+    if (node.staticClass) {
+      node.staticClass = node.staticClass.slice(0, -1) + ' is-' + target + '"'
+    }
+  }
   const preset = presets[target]
   const state = new State({
     rootNode: node,
