@@ -8,7 +8,7 @@ const hashify = require( '../utils/hashify' )
 
 module.exports = function ( source ) {
   const loaderContext = this
-  const entryHelper = loaderContext.megaloEntryHelper
+  const entryHelper = loaderContext.colaEntryHelper
   const callback = loaderContext.async()
   let sourcemap = null
 
@@ -38,8 +38,8 @@ module.exports = function ( source ) {
     source = code
     sourcemap = map
 
-    const megaloConfig = ( metadata.megaloConfig && metadata.megaloConfig.value ) || {}
-    const entryComponent = metadata.megaloEntryComponent
+    const colaConfig = ( metadata.colaConfig && metadata.colaConfig.value ) || {}
+    const entryComponent = metadata.colaEntryComponent
 
     if ( !entryComponent ) {
       callback( new Error( 'Cannot resolve entry component for ' + entryKey ) )
@@ -48,9 +48,9 @@ module.exports = function ( source ) {
 
     resolveSource.call( loaderContext, entryComponent )
       .then( resolved => {
-        loaderContext.megaloCacheToPages( {
+        loaderContext.colaCacheToPages( {
           file: entryKey,
-          config: megaloConfig,
+          config: colaConfig,
           entryComponent: {
             name: hashify( resolved ),
           },

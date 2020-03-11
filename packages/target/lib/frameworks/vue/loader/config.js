@@ -7,7 +7,7 @@ const toString = Object.prototype.toString
 
 module.exports = function ( source ) {
   const loaderContext = this
-  const entryHelper = loaderContext.megaloEntryHelper
+  const entryHelper = loaderContext.colaEntryHelper
   const resourcePath = loaderContext.resourcePath
   const query = qs.parse( loaderContext.resourceQuery.slice( 1 ) ) || {}
   const lang = query.lang || 'json'
@@ -25,7 +25,7 @@ module.exports = function ( source ) {
 
       const entryKey = entryHelper.getEntryKey( loaderContext.resourcePath )
 
-      loaderContext.megaloCacheToPages( {
+      loaderContext.colaCacheToPages( {
         file: entryKey,
         config: config,
       } )
@@ -38,7 +38,7 @@ module.exports = function ( source ) {
 function getParseError( e, source, resourcePath ) {
   const relativePath = path.relative( process.cwd(), resourcePath )
   const reason = `
-[@MEGALO/TARGET] Failed to parse <config> block in ${ relativePath },
+[@COLA/TARGET] Failed to parse <config> block in ${ relativePath },
 
 <config>
 ${ source.trim() }

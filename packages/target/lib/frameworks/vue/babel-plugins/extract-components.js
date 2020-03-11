@@ -39,7 +39,7 @@ module.exports = function ( { types: t } ) {
         components[ key ] = source
       } )
 
-      path.hub.file.metadata.megaloComponents = components
+      path.hub.file.metadata.colaComponents = components
     }
   }
 

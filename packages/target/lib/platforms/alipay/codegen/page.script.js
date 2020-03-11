@@ -1,8 +1,8 @@
 const relativeToRoot = require( '../../shared/utils/relativeToRoot' )
 
 const fixGlobalSnippet = `
-if (!my.__megalo) {
-  my.__megalo = {
+if (!my.__cola) {
+  my.__cola = {
     App: App,
   }
 }

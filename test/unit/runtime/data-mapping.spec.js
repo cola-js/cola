@@ -84,7 +84,7 @@ describe('data mapping', () => {
       },
       data () {
         return {
-          text: 'megalo'
+          text: 'cola'
         }
       }
     }
@@ -92,10 +92,10 @@ describe('data mapping', () => {
     const { page } = createPage(pageOptions)
 
     // binding text node
-    expect(getPageData(page, '0').h['2'].t).toEqual('megalo')
-    expect(getPageData(page, '0').h['5'].t).toEqual('head megalo tail')
+    expect(getPageData(page, '0').h['2'].t).toEqual('cola')
+    expect(getPageData(page, '0').h['5'].t).toEqual('head cola tail')
 
     // component id
-    expect(getPageData(page, '0,0').h['1'].t).toEqual('megalo box')
+    expect(getPageData(page, '0,0').h['1'].t).toEqual('cola box')
   })
 })

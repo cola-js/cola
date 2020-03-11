@@ -12,7 +12,7 @@ module.exports = function ( { types: t } ) {
           ) {
             const code = generate( prop.value ).code
 
-            path.hub.file.metadata.megaloConfig = {
+            path.hub.file.metadata.colaConfig = {
               code: code,
               node: prop.value,
               value: babelon.eval( code )

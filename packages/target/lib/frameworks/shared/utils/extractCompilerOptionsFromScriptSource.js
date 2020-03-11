@@ -23,7 +23,7 @@ module.exports = function( source, extractComponentsPlugin, loaderContext ) {
     return Promise.reject( e )
   }
 
-  const components = ( metadata && metadata.megaloComponents ) || {}
+  const components = ( metadata && metadata.colaComponents ) || {}
 
   const tmp = {}
 

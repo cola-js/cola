@@ -7259,12 +7259,12 @@ try {
   app$1.init = function (vueOptions) {
     var mpApp;
 
-    /* istanbul ignore else */ 
+    /* istanbul ignore else */
     if (typeof my === 'undefined') {
       mpApp = App;
     } else {
       // 支付宝小程序中 App() 必须在 app.js 里调用，且不能调用多次。
-      mpApp = my.__megalo.App; // eslint-disable-line
+      mpApp = my.__cola.App; // eslint-disable-line
     }
     var appOptions = {
       data: {},
@@ -7287,7 +7287,7 @@ try {
         rootVM.$mount();
         callHook$2(rootVM, 'onLaunch', options);
       }
-    }; 
+    };
     installHooks(appOptions, vueOptions.options, hooks$2);
     mpApp(appOptions);
   };
@@ -7518,7 +7518,7 @@ try {
 
   /*  */
 
-  Vue.megaloVersion = '0.1.3';
+  Vue.colaVersion = '0.1.3';
 
   return Vue;
 

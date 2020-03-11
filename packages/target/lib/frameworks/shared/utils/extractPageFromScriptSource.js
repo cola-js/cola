@@ -7,7 +7,7 @@ const hashify = require( '../../../utils/hashify' )
 const removeExtension = require( '../../../utils/removeExtension' )
 
 module.exports = function ( source, loaderContext ) {
-  const entryHelper = loaderContext.megaloEntryHelper
+  const entryHelper = loaderContext.colaEntryHelper
 
   const resourcePath = removeExtension( loaderContext.resourcePath )
 

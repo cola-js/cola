@@ -14,7 +14,7 @@ module.exports = function ( source ) {
     extractPageFromScriptSource( source, loaderContext ),
   ]
 
-  const deferred = loaderContext.megaloDeferred( realResourcePath )
+  const deferred = loaderContext.colaDeferred( realResourcePath )
 
   Promise.all( jobs )
     .then( deferred.resolve )

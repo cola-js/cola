@@ -51,7 +51,7 @@ module.exports = function ( source ) {
   // add module to compiler option in order to handle <template platform="xxx">
   attachMultiPlatformModule(compilerOptions);
 
-  const deferred = loaderContext.megaloDeferred( realResourcePath )
+  const deferred = loaderContext.colaDeferred( realResourcePath )
 
   deferred.promise
     .then( data => {
@@ -61,16 +61,16 @@ module.exports = function ( source ) {
 
       validateImports( loaderContext, cOptions.imports )
 
-      loaderContext.megaloCacheToAllCompilerOptions(
+      loaderContext.colaCacheToAllCompilerOptions(
         realResourcePath,
         Object.assign( {}, compilerOptions, cOptions ),
       )
 
       if ( page ) {
-        loaderContext.megaloCacheToPages( page )
+        loaderContext.colaCacheToPages( page )
       }
 
-      loaderContext.megaloCacheToTemplates(
+      loaderContext.colaCacheToTemplates(
         realResourcePath,
         {
           source,

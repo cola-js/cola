@@ -1,4 +1,4 @@
-// normalize createMegaloTarget -> options.compiler
+// normalize createColaTarget -> options.compiler
 module.exports = function ( compiler ) {
   const normalized = {}
 

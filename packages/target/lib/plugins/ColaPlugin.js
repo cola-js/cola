@@ -21,7 +21,7 @@ const pages = {}
 const allCompilerOptions = {}
 const templates = {}
 
-class MegaloPlugin {
+class ColaPlugin {
   constructor( options = {} ) {
     this.options = options
   }
@@ -30,14 +30,14 @@ class MegaloPlugin {
     const compilerOptions = compiler.options
     const rawRules = compilerOptions.module.rules
     const { rules } = new RuleSet( rawRules )
-    const megaloOptions = this.options
-    const megaloTemplateCompiler = megaloOptions.compiler
+    const colaOptions = this.options
+    const colaTemplateCompiler = colaOptions.compiler
 
     // replace globalObject
-    replaceGlobalObject( compiler, megaloOptions )
+    replaceGlobalObject( compiler, colaOptions )
 
     // modify the resolve options
-    modifyResolveOption(compiler, megaloOptions);
+    modifyResolveOption(compiler, colaOptions);
 
     // generate pages
     hookJSEntry( {
@@ -73,7 +73,7 @@ class MegaloPlugin {
     attachDeferredAPI( compiler )
 
     // lazy emit files using `pages` && `allCompilerOptions` && `templates`
-    lazyEmit( compiler, megaloTemplateCompiler, megaloOptions )
+    lazyEmit( compiler, colaTemplateCompiler, colaOptions )
 
     compiler.options.module.rules = rules
   }
@@ -105,7 +105,7 @@ function modifyResolveOption ( compiler, options ) {
   compiler.options.resolve.mainFiles = getConcatedArray(compiler.options.resolve.mainFiles, mainFiles);
   compiler.options.resolve.extensions = getConcatedArray(compiler.options.resolve.extensions, extensions);
 
-  compiler.options.resolve.mainFiles.length > mainFiles.length && console.log(chalk.yellow('warning') + " megalo modified your webpack config " + chalk.bgBlue("resolve.mainFiles") + ", contact us if any problem occurred");
+  compiler.options.resolve.mainFiles.length > mainFiles.length && console.log(chalk.yellow('warning') + " cola modified your webpack config " + chalk.bgBlue("resolve.mainFiles") + ", contact us if any problem occurred");
 }
 
 function getConcatedArray (source, target) {
@@ -204,8 +204,8 @@ function fixAssetPaths( { assets, subpackages } ) {
   } )
 }
 
-function replaceGlobalObject( compiler, megaloOptions ) {
-  if (megaloOptions.platform === 'alipay') {
+function replaceGlobalObject( compiler, colaOptions ) {
+  if (colaOptions.platform === 'alipay') {
     compiler.options.output.globalObject = 'my'
   } else {
     compiler.options.output.globalObject = 'global'
@@ -234,7 +234,7 @@ function hookCss({ rules, files = [], loader }) {
   if ( !entryRuleArr.length ) {
     return
   }
-  // add loader to loaders which also enclude loaders cloned by vue-loader-plugin while vue-loader itself should not be applied this change 
+  // add loader to loaders which also enclude loaders cloned by vue-loader-plugin while vue-loader itself should not be applied this change
   entryRuleArr.forEach((index) => {
     if ( index != vueIndex ) {
       rules[index].use ? rules[index].use.unshift( loader ) : rules[index].use = [ loader ]
@@ -242,11 +242,11 @@ function hookCss({ rules, files = [], loader }) {
   });
 }
 
-function lazyEmit( compiler, megaloTemplateCompiler, megaloOptions ) {
-  const { platform = 'wechat' } = megaloOptions
+function lazyEmit( compiler, colaTemplateCompiler, colaOptions ) {
+  const { platform = 'wechat' } = colaOptions
 
   compiler.hooks.emit.tap(
-    `megalo-plugin-emit`,
+    `cola-plugin-emit`,
     compilation => {
       const { entrypoints, assets } = compilation || {}
       const appConfig = pages.app && pages.app.config && pages.app.config || {}
@@ -276,8 +276,8 @@ function lazyEmit( compiler, megaloTemplateCompiler, megaloOptions ) {
           subpackages,
           templates,
           allCompilerOptions,
-          megaloTemplateCompiler,
-          megaloOptions
+          colaTemplateCompiler,
+          colaOptions
         },
         {
           compiler,
@@ -359,23 +359,23 @@ function moveAssets( { assets = {}, subpackages = [] } ) {
 function attachEntryHelper( compiler ) {
   const entryHelper = createEntryHelper( compiler.options.entry )
 
-  attach( 'megalo-plugin-entry-helper', compiler, loaderContext => {
-    loaderContext.megaloEntryHelper = entryHelper
+  attach( 'cola-plugin-entry-helper', compiler, loaderContext => {
+    loaderContext.colaEntryHelper = entryHelper
   } )
 }
 
 function attachCacheAPI( compiler ) {
-  attach( 'megalo-plugin-cache-api', compiler, loaderContext => {
-    loaderContext.megaloCacheToPages = cacheToPages
-    loaderContext.megaloCacheToAllCompilerOptions = cacheToAllCompilerOptions
-    loaderContext.megaloCacheToTemplates = cacheToTemplates
+  attach( 'cola-plugin-cache-api', compiler, loaderContext => {
+    loaderContext.colaCacheToPages = cacheToPages
+    loaderContext.colaCacheToAllCompilerOptions = cacheToAllCompilerOptions
+    loaderContext.colaCacheToTemplates = cacheToTemplates
   } )
 }
 
 const _deferredCache = {}
 function attachDeferredAPI( compiler ) {
-  attach( 'megalo-plugin-deferred-api', compiler, loaderContext => {
-    loaderContext.megaloDeferred = function ( key ) {
+  attach( 'cola-plugin-deferred-api', compiler, loaderContext => {
+    loaderContext.colaDeferred = function ( key ) {
       if ( !_deferredCache[ key ] ) {
         _deferredCache[ key ] = deferred()
 
@@ -420,4 +420,4 @@ function cacheToTemplates( resourcePath, template ) {
   templates[ resourcePath ] = template
 }
 
-module.exports = MegaloPlugin
+module.exports = ColaPlugin

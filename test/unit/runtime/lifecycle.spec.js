@@ -121,7 +121,7 @@ describe('lifecycle', () => {
       onReachBottom: spyFn('onReachBottom'),
       onPageScroll: spyFn('onPageScroll'),
       onTabItemTap: spyFn('onTabItemTap'),
-      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'megalo' })
+      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'cola' })
     }
 
     new Vue(pageOptions).$mount()
@@ -189,7 +189,7 @@ describe('lifecycle', () => {
     // page onShareAppMessage
     const shareConfig = page._callHook('onShareAppMessage')
     expect(pageOptions.onShareAppMessage).toHaveBeenCalledTimes(1)
-    expect(shareConfig).toEqual({ from: 'megalo' })
+    expect(shareConfig).toEqual({ from: 'cola' })
 
     // page onUnload
     page._callHook('onUnload')
@@ -216,7 +216,7 @@ describe('lifecycle', () => {
       // onReachBottom: spyFn('onReachBottom'),
       // onPageScroll: spyFn('onPageScroll'),
       // onTabItemTap: spyFn('onTabItemTap'),
-      // onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'megalo' })
+      // onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'cola' })
     }
     const pageOptions = {
       mpType: 'page',
@@ -287,7 +287,7 @@ describe('lifecycle', () => {
     // // page onShareAppMessage
     // const shareConfig = page._callHook('onShareAppMessage')
     // expect(compOptions.onShareAppMessage).toHaveBeenCalledTimes(1)
-    // expect(shareConfig).toEqual({ from: 'megalo' })
+    // expect(shareConfig).toEqual({ from: 'cola' })
 
     // page onUnload
     page._callHook('onUnload')
@@ -309,7 +309,7 @@ describe('lifecycle', () => {
       onReachBottom: spyFn('onReachBottomMixin'),
       onPageScroll: spyFn('onPageScrollMixin'),
       onTabItemTap: spyFn('onTabItemTapMixin'),
-      onShareAppMessage: spyFn('onShareAppMessageMixin').and.returnValue({ from: 'megalo, mixins' })
+      onShareAppMessage: spyFn('onShareAppMessageMixin').and.returnValue({ from: 'cola, mixins' })
     }
 
     const pageOptions = {
@@ -330,7 +330,7 @@ describe('lifecycle', () => {
       onReachBottom: spyFn('onReachBottom'),
       onPageScroll: spyFn('onPageScroll'),
       onTabItemTap: spyFn('onTabItemTap'),
-      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'megalo' })
+      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'cola' })
     }
 
     new Vue(pageOptions).$mount()
@@ -408,7 +408,7 @@ describe('lifecycle', () => {
     const shareConfig = page._callHook('onShareAppMessage')
     expect(pageOptions.onShareAppMessage).toHaveBeenCalledTimes(1)
     expect(mixins.onShareAppMessage).toHaveBeenCalledTimes(1)
-    expect(shareConfig).toEqual({ from: 'megalo' })
+    expect(shareConfig).toEqual({ from: 'cola' })
 
     // page onUnload
     page._callHook('onUnload')
@@ -440,7 +440,7 @@ describe('lifecycle', () => {
       onReachBottom: spyFn('onReachBottom'),
       onPageScroll: spyFn('onPageScroll'),
       onTabItemTap: spyFn('onTabItemTap'),
-      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'megalo' })
+      onShareAppMessage: spyFn('onShareAppMessage').and.returnValue({ from: 'cola' })
     }
 
     const BasePage = Vue.extend(pageOptions)
@@ -512,7 +512,7 @@ describe('lifecycle', () => {
     // page onShareAppMessage
     const shareConfig = page._callHook('onShareAppMessage')
     expect(pageOptions.onShareAppMessage).toHaveBeenCalledTimes(1)
-    expect(shareConfig).toEqual({ from: 'megalo' })
+    expect(shareConfig).toEqual({ from: 'cola' })
 
     // page onUnload
     page._callHook('onUnload')

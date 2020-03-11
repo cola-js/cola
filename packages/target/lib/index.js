@@ -1,7 +1,7 @@
 const webpack = require( 'webpack' )
 const normalizeCompiler = require( './utils/normalizeCompiler' )
 
-function createMegaloTarget( options = {} ) {
+function createColaTarget( options = {} ) {
   options = normalizeOptions( options )
 
   const { platform = 'wechat', htmlParse } = options
@@ -10,7 +10,7 @@ function createMegaloTarget( options = {} ) {
     const FunctionModulePlugin = require( 'webpack/lib/FunctionModulePlugin' )
     const JsonpTemplatePlugin = require( 'webpack/lib/web/JsonpTemplatePlugin' )
     const LoaderTargetPlugin = webpack.LoaderTargetPlugin
-    const MegaloPlugin = require( './plugins/MegaloPlugin' )
+    const ColaPlugin = require( './plugins/ColaPlugin' )
     const CopyHtmlparsePlugin = require( './plugins/CopyHtmlparsePlugin' )
     const FrameworkPlugins = [
       require( './frameworks/vue/plugin' )
@@ -19,7 +19,7 @@ function createMegaloTarget( options = {} ) {
     new FunctionModulePlugin().apply( compiler )
     new JsonpTemplatePlugin().apply( compiler )
     new LoaderTargetPlugin( 'mp-' + platform ).apply( compiler )
-    new MegaloPlugin( options ).apply( compiler )
+    new ColaPlugin( options ).apply( compiler )
     FrameworkPlugins.forEach( Plugin => new Plugin( options ).apply( compiler ) )
 
     if ( !!htmlParse ) {
@@ -34,4 +34,4 @@ function normalizeOptions( options = {} ) {
   } )
 }
 
-module.exports = createMegaloTarget
+module.exports = createColaTarget

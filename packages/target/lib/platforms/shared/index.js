@@ -21,10 +21,10 @@ module.exports = function( {
 } ) {
   return function(
     pages = [],
-    { subpackages, templates, allCompilerOptions, megaloTemplateCompiler, megaloOptions } = {},
+    { subpackages, templates, allCompilerOptions, colaTemplateCompiler, colaOptions } = {},
     { compiler, compilation } = {}
   ) {
-    const { htmlParse = false, platform } = megaloOptions
+    const { htmlParse = false, platform } = colaOptions
 
     const htmlParsePaths = {
       template: constants.HTMLPARSE_TEMPLATE_OUTPUT_PATH + extensions.template,
@@ -67,8 +67,8 @@ module.exports = function( {
 
       // changed
       if ( cached.md5 !== md5 ) {
-        let compiler = megaloTemplateCompiler[ useCompiler ] ||
-          megaloTemplateCompiler.vue
+        let compiler = colaTemplateCompiler[ useCompiler ] ||
+          colaTemplateCompiler.vue
 
         const generated = generators.component( {
           source,

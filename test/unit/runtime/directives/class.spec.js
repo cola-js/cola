@@ -48,21 +48,21 @@ describe(':class', () => {
 
   it('with plain string', () => {
     assertClass([
-      ['foo megalo', 'foo megalo'],
-      ['megalo', 'megalo']
+      ['foo cola', 'foo cola'],
+      ['cola', 'cola']
     ])
   })
 
   it('with array', () => {
     assertClass([
-      [['megalo', 'box'], 'megalo box'],
+      [['cola', 'box'], 'cola box'],
       [['', undefined], '']
     ])
   })
 
   it('with object', () => {
     assertClass([
-      [{ megalo: true, box: true }, 'megalo box'],
+      [{ cola: true, box: true }, 'cola box'],
       [null, '']
     ])
   })

@@ -18,7 +18,7 @@ module.exports = function ( { types: t } ) {
             if ( args.length === 1 && t.isIdentifier( args[ 0 ] ) ) {
               const entryComponentCtorName = args[ 0 ].name
               const source = findSource( entryComponentCtorName, bindings )
-              path.hub.file.metadata.megaloEntryComponent = source
+              path.hub.file.metadata.colaEntryComponent = source
             }
           }
         }
@@ -45,7 +45,7 @@ module.exports = function ( { types: t } ) {
               if ( t.isIdentifier( node.init.callee ) ) {
                 const ctorName = node.init.callee.name
 
-                path.hub.file.metadata.megaloEntryComponent = findSource( ctorName, bindings )
+                path.hub.file.metadata.colaEntryComponent = findSource( ctorName, bindings )
               }
             }
           }

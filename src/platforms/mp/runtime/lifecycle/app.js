@@ -14,12 +14,12 @@ const hooks = [
 app.init = function (vueOptions) {
   let mpApp
 
-  /* istanbul ignore else */ 
+  /* istanbul ignore else */
   if (typeof my === 'undefined') {
     mpApp = App
   } else {
     // 支付宝小程序中 App() 必须在 app.js 里调用，且不能调用多次。
-    mpApp = my.__megalo.App // eslint-disable-line
+    mpApp = my.__cola.App // eslint-disable-line
   }
   const appOptions = {
     data: {},
@@ -39,7 +39,7 @@ app.init = function (vueOptions) {
       rootVM.$mount()
       callHook(rootVM, 'onLaunch', options)
     }
-  } 
+  }
   installHooks(appOptions, vueOptions.options, hooks)
   mpApp(appOptions)
 }
