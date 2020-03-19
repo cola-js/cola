@@ -7518,7 +7518,7 @@ try {
 
   /*  */
 
-  Vue.colaVersion = '0.1.5';
+  Vue.colaVersion = '0.1.6';
 
   return Vue;
 
