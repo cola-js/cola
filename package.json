@@ -1,6 +1,6 @@
 {
   "name": "@cola-js/runtime",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Reactive, component-oriented view layer for modern web interfaces.",
   "sideEffects": false,
   "scripts": {

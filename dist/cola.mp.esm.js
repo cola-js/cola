@@ -2630,7 +2630,7 @@ try {
 
     destroy: function destroy (vnode) {
       var componentInstance = vnode.componentInstance;
-      if (!componentInstance._isDestroyed) {
+      if (componentInstance && !componentInstance._isDestroyed) {
         if (!vnode.data.keepAlive) {
           componentInstance.$destroy();
         } else {
@@ -7518,7 +7518,7 @@ try {
 
   /*  */
 
-  Vue.colaVersion = '0.1.6';
+  Vue.colaVersion = '0.1.7';
 
   return Vue;
 
