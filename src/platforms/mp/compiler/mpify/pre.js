@@ -30,6 +30,14 @@ export function mpify (node, options) {
   if (/[\\/]pages[\\/][^_]+\.vue$/.test(options.realResourcePath)) {
     if (node.staticClass) {
       node.staticClass = node.staticClass.slice(0, -1) + ' is-mp is-' + target + '"'
+      // 支持页面根节点动态注入 class
+      let classBinding = node.classBinding
+      if (classBinding) {
+        classBinding = (classBinding[0] === '[' ? classBinding.slice(0, -1) : '[' + classBinding) + ','
+      } else {
+        classBinding = '['
+      }
+      node.classBinding = classBinding + '__RC__]'
     }
   }
   const preset = presets[target]
