@@ -4904,6 +4904,14 @@ var wechat = mergePreset(basePrest, {
       mpType = mpType === 'click' ? 'tap' : mpType;
     }
     return ("" + binder + mpType)
+  },
+  visitors: {
+    canvas: function canvas (el) {
+      var attrsMap = el.attrsMap; if ( attrsMap === void 0 ) attrsMap = {};
+      if (!attrsMap['canvas-id']) {
+        attrsMap['canvas-id'] = attrsMap['id'];
+      }
+    }
   }
 });
 
@@ -4994,6 +5002,14 @@ var alipay = mergePreset(basePrest, {
     }
 
     return ("" + binder + (capitalize(mpType)))
+  },
+  visitors: {
+    canvas: function canvas (el) {
+      var attrsMap = el.attrsMap; if ( attrsMap === void 0 ) attrsMap = {};
+      if (!attrsMap['id']) {
+        attrsMap['id'] = attrsMap['canvas-id'];
+      }
+    }
   }
 });
 
@@ -5055,9 +5071,13 @@ var swan = mergePreset(basePrest, {
     return ("" + binder + mpType)
   },
   visitors: {
-    all: function all (el) {
-      if (el.tag === 'input') {
-        el.isSelfCloseTag = true;
+    input: function input (el) {
+      el.isSelfCloseTag = true;
+    },
+    canvas: function canvas (el) {
+      var attrsMap = el.attrsMap; if ( attrsMap === void 0 ) attrsMap = {};
+      if (!attrsMap['canvas-id']) {
+        attrsMap['canvas-id'] = attrsMap['id'];
       }
     }
   }
@@ -5119,6 +5139,14 @@ var toutiao = mergePreset(basePrest, {
       mpType = mpType === 'click' ? 'tap' : mpType;
     }
     return ("" + binder + mpType)
+  },
+  visitors: {
+    canvas: function canvas (el) {
+      var attrsMap = el.attrsMap; if ( attrsMap === void 0 ) attrsMap = {};
+      if (!attrsMap['canvas-id']) {
+        attrsMap['canvas-id'] = attrsMap['id'];
+      }
+    }
   }
 });
 
@@ -5151,6 +5179,14 @@ function mpify (node, options) {
   if (/[\\/]pages[\\/][^_]+\.vue$/.test(options.realResourcePath)) {
     if (node.staticClass) {
       node.staticClass = node.staticClass.slice(0, -1) + ' is-mp is-' + target + '"';
+      // 支持页面根节点动态注入 class
+      var classBinding = node.classBinding;
+      if (classBinding) {
+        classBinding = (classBinding[0] === '[' ? classBinding.slice(0, -1) : '[' + classBinding) + ',';
+      } else {
+        classBinding = '[';
+      }
+      node.classBinding = classBinding + '__RC__]';
     }
   }
   var preset = presets[target];
