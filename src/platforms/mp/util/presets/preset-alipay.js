@@ -92,5 +92,13 @@ export default mergePreset(basePrest, {
     }
 
     return `${binder}${capitalize(mpType)}`
+  },
+  visitors: {
+    canvas (el) {
+      const { attrsMap = {} } = el
+      if (!attrsMap['id']) {
+        attrsMap['id'] = attrsMap['canvas-id']
+      }
+    }
   }
 })

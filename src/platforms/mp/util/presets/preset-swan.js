@@ -62,9 +62,13 @@ export default mergePreset(basePrest, {
     return `${binder}${mpType}`
   },
   visitors: {
-    all (el) {
-      if (el.tag === 'input') {
-        el.isSelfCloseTag = true
+    input (el) {
+      el.isSelfCloseTag = true
+    },
+    canvas (el) {
+      const { attrsMap = {} } = el
+      if (!attrsMap['canvas-id']) {
+        attrsMap['canvas-id'] = attrsMap['id']
       }
     }
   }

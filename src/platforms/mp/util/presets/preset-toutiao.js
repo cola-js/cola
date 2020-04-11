@@ -60,5 +60,13 @@ export default mergePreset(basePrest, {
       mpType = mpType === 'click' ? 'tap' : mpType
     }
     return `${binder}${mpType}`
+  },
+  visitors: {
+    canvas (el) {
+      const { attrsMap = {} } = el
+      if (!attrsMap['canvas-id']) {
+        attrsMap['canvas-id'] = attrsMap['id']
+      }
+    }
   }
 })
