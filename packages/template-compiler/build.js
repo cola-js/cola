@@ -5351,7 +5351,7 @@ function walkIf (node, state) {
     conditions.forEach(function (condition) {
       var block = condition.block;
       var noneTemplateBlock = findFirstNoneTemplateNode(block);
-      addAttr$1(noneTemplateBlock, 'i_', ("[ " + (conditions.__extratExpression.join(',')) + " ]"));
+      addAttr$1(noneTemplateBlock, 'i_', ("[" + (conditions.__extratExpression.join(',')) + "]"));
     });
   }
 }
@@ -5714,6 +5714,7 @@ var TAG_MAP = {
 
   // 音视频
   'audio': 'audio',
+  'camera': 'camera',
   'source': 'audio',
   'video': 'video',
   'track': 'video',
@@ -5928,32 +5929,32 @@ TemplateGenerator.prototype.genComponent = function genComponent (el) {
     if (ifHolder) {
       return ("s_" + name + ":" + ifHolder + "?'" + slotName + "':''")
     } else {
-      return ("s_" + name + ": '" + slotName + "'")
+      return ("s_" + name + ":'" + slotName + "'")
     }
   });
   var cid = c_;
   var scope = '';
-  var tail = ", " + FOR_TAIL_VAR + ": _t || ''";
+  var tail = ", " + FOR_TAIL_VAR + ":_t||''";
 
   // if the component is in slot snippet, the slot scopeid is contained in PARENT_SCOPE_ID_VAR
   if (this.scopeId && !this.isInSlotSnippet()) {
-    scope = "," + PARENT_SCOPE_ID_VAR + ":(" + PARENT_SCOPE_ID_VAR + "||'')+' " + (this.scopeId) + "'";
+    scope = ", " + PARENT_SCOPE_ID_VAR + ":(" + PARENT_SCOPE_ID_VAR + "||'')+'" + (this.scopeId) + "'";
   } else {
-    scope = "," + PARENT_SCOPE_ID_VAR + ":" + PARENT_SCOPE_ID_VAR + "||''";
+    scope = ", " + PARENT_SCOPE_ID_VAR + ":" + PARENT_SCOPE_ID_VAR + "||''";
   }
 
   // passing parent v-for tail to slot inside v-for
   // TODO: refactor
   if (isDef(f_)) {
-    cid = c_ + " + (_t || '') + " + sep$1 + " + " + f_;
-    tail = ", " + FOR_TAIL_VAR + ": (" + FOR_TAIL_VAR + " || '') + " + sep$1 + " + " + f_;
+    cid = c_ + "+(_t||'')+" + sep$1 + "+" + f_;
+    tail = ", " + FOR_TAIL_VAR + ":(" + FOR_TAIL_VAR + "||'')+" + sep$1 + "+" + f_;
   } else {
-    cid = c_ + " + (_t || '')";
-    tail = ", " + FOR_TAIL_VAR + ": " + FOR_TAIL_VAR + " || ''";
+    cid = c_ + "+(_t||'')";
+    tail = ", " + FOR_TAIL_VAR + ":" + FOR_TAIL_VAR + "||''";
   }
 
   var data = [
-    ("..." + ROOT_DATA_VAR + "[ " + VM_ID_PREFIX + " + " + cid + " ]"),
+    ("..." + ROOT_DATA_VAR + "[" + VM_ID_PREFIX + "+" + cid + "]"),
     ("" + ROOT_DATA_VAR) ].concat( slotsNames
   ).join(', ');
 
@@ -6134,10 +6135,10 @@ TemplateGenerator.prototype.genClass = function genClass (el) {
     klass.push(staticClass);
   }
   if (classBinding) {
-    klass.push(("{{ " + (this.genHolder(el, 'class')) + " }}"));
+    klass.push(("{{" + (this.genHolder(el, 'class')) + "}}"));
   }
   if (h_ === '0') {
-    klass.push(("{{ " + (this.genHolder(el, 'rootClass')) + " }}"));
+    klass.push(("{{" + (this.genHolder(el, 'rootClass')) + "}}"));
     // parent scope id class string only affect the root of a component
     klass.push(("{{" + PARENT_SCOPE_ID_VAR + "}}"));
   }
@@ -6160,12 +6161,12 @@ TemplateGenerator.prototype.genStyle = function genStyle (el) {
   var styleBinding = el.styleBinding;
   var staticStyle = el.staticStyle; if ( staticStyle === void 0 ) staticStyle = '';
   var style = [];
-  staticStyle = staticStyle.replace(/"|{|}/g, '').split(',').join('; ');
+  staticStyle = staticStyle.replace(/"|{|}/g, '').split(',').join(';');
   if (staticStyle) {
     style.push(staticStyle);
   }
   if (styleBinding) {
-    style.push(("{{ " + (this.genHolder(el, 'style')) + " }}"));
+    style.push(("{{" + (this.genHolder(el, 'style')) + "}}"));
   }
   style = style.filter(notEmpty).join('; ');
   return style ? (" style=\"" + style + "\"") : ''
@@ -6176,7 +6177,7 @@ TemplateGenerator.prototype.genVShow = function genVShow (el) {
   if (!attrsMap['v-show']) {
     return ''
   }
-  return (" hidden=\"{{ " + (this.genHolder(el, 'vshow')) + " }}\"")
+  return (" hidden=\"{{" + (this.genHolder(el, 'vshow')) + "}}\"")
 };
 
 TemplateGenerator.prototype.genAttrs = function genAttrs (el) {
@@ -6197,15 +6198,15 @@ TemplateGenerator.prototype.genAttrs = function genAttrs (el) {
     ) {
       return ''
     } else if (vmodelReg.test(name)) {
-      return ("value=\"{{ " + (this$1.genHolder(el, 'value')) + " }}\"")
+      return ("value=\"{{" + (this$1.genHolder(el, 'value')) + "}}\"")
     // <img :data-a="a" :src="img">
     } else if (vbindReg$1.test(name)) {
       var realName = name.replace(vbindReg$1, '');
       var camelizedName = camelize(realName);
-      return (realName + "=\"{{ " + (this$1.genHolderVar()) + "[ " + (this$1.genHid(el)) + " ]." + camelizedName + " }}\"")
+      return (realName + "=\"{{" + (this$1.genHolderVar()) + "[" + (this$1.genHid(el)) + "]." + camelizedName + "}}\"")
     // <img src="../assets/img.jpg">
     } else if (!/^https?|data:/.test(value) && this$1.isTransformAssetUrl(el, name)) {
-      return (name + "=\"{{ " + (this$1.genHolderVar()) + "[ " + (this$1.genHid(el)) + " ][ '" + name + "' ] }}\"")
+      return (name + "=\"{{" + (this$1.genHolderVar()) + "[" + (this$1.genHid(el)) + "]['" + name + "']}}\"")
     } else {
       return (name + "=\"" + value + "\"")
     }
@@ -6236,7 +6237,7 @@ TemplateGenerator.prototype.genEvents = function genEvents (el) {
    * when the element is in a slot, it will recieve "_c" as the actual component instance id
    * othewise, using the current scope which usually the parent component in the template
    */
-  return (" data-cid=\"{{ _c || " + cid + " }}\" data-hid=\"{{ " + (this.genHid(el)) + " }}\" " + eventAttrs)
+  return (" data-cid=\"{{_c||" + cid + "}}\" data-hid=\"{{" + (this.genHid(el)) + "}}\" " + eventAttrs)
 };
 
 TemplateGenerator.prototype.genIfConditions = function genIfConditions (el) {
@@ -6262,9 +6263,9 @@ TemplateGenerator.prototype.genIf = function genIf (el) {
   var ELSE = this.directive('else');
 
   if (el.if) {
-    return (" " + IF + "=\"{{ " + (this.genHolder(el, 'if')) + " }}\"")
+    return (" " + IF + "=\"{{" + (this.genHolder(el, 'if')) + "}}\"")
   } else if (el.elseif) {
-    return (" " + ELSE_IF + "=\"{{ " + (this.genHolder(el, 'if')) + " }}\"")
+    return (" " + ELSE_IF + "=\"{{" + (this.genHolder(el, 'if')) + "}}\"")
   } else if (el.else) {
     return (" " + ELSE)
   }
@@ -6289,14 +6290,14 @@ TemplateGenerator.prototype.genFor = function genFor (el) {
   if (this.isInSlotSnippet()) {
     forHolderId =
       isDef(forFid)
-        ? (forHid + " + (" + FOR_TAIL_VAR + " || '') + " + sep$1 + " + " + forFid)
-        : (forHid + " + (" + FOR_TAIL_VAR + " || '')");
+        ? (forHid + "+(" + FOR_TAIL_VAR + "||'')+" + sep$1 + "+" + forFid)
+        : (forHid + "+(" + FOR_TAIL_VAR + "||'')");
   } else {
-    forHolderId = isDef(forFid) ? (forHid + " + " + sep$1 + " + " + forFid) : forHid;
+    forHolderId = isDef(forFid) ? (forHid + "+" + sep$1 + "+" + forFid) : forHid;
   }
 
   var _for = [
-    (" " + FOR + "=\"{{ " + (this.genHolder(forHolderId, 'for')) + " }}\""),
+    (" " + FOR + "=\"{{" + (this.genHolder(forHolderId, 'for')) + "}}\""),
     this.genForKey(el),
     alias ? (" " + FOR_ITEM + "=\"" + alias + "\"") : /* istanbul ignore next */ ''
   ];
@@ -6344,9 +6345,9 @@ TemplateGenerator.prototype.genSlot = function genSlot (el) {
 
   var scope = '';
   if (this.scopeId) {
-    scope = "," + PARENT_SCOPE_ID_VAR + ":(" + PARENT_SCOPE_ID_VAR + "||'')+' " + (this.scopeId) + "'";
+    scope = ", " + PARENT_SCOPE_ID_VAR + ":(" + PARENT_SCOPE_ID_VAR + "||'')+'" + (this.scopeId) + "'";
   } else {
-    scope = "," + PARENT_SCOPE_ID_VAR + ":" + PARENT_SCOPE_ID_VAR + "||''";
+    scope = ", " + PARENT_SCOPE_ID_VAR + ":" + PARENT_SCOPE_ID_VAR + "||''";
   }
 
   var directives = [
@@ -6366,18 +6367,18 @@ TemplateGenerator.prototype.genSlot = function genSlot (el) {
       ("" + fallbackSlot),
       ("<block s-if=\"s_" + slotName + "\">"),
         "<template ",
-          ("is=\"{{ s_" + slotName + " }}\" "),
+          ("is=\"{{s_" + slotName + "}}\" "),
           "data=\"",
-          this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[ c ], " + ROOT_DATA_VAR + tail + ", _c: c")),
+          this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[c], " + ROOT_DATA_VAR + tail + ", _c:c")),
         ("\"" + directives + "/>"),
       "</block>",
 
       // else use default slot snippet
       "<block s-else>",
         "<template ",
-          ("is=\"{{ '" + fallbackSlotName + "' }}\" "),
+          ("is=\"{{'" + fallbackSlotName + "'}}\" "),
           "data=\"",
-            this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[ c ], " + ROOT_DATA_VAR + tail + ", _c: c")),
+            this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[c], " + ROOT_DATA_VAR + tail + ", _c:c")),
         ("\"" + (this.genFor(el)) + "/>"),
       "</block>"
     ].join('')
@@ -6386,9 +6387,9 @@ TemplateGenerator.prototype.genSlot = function genSlot (el) {
   return [
     ("" + fallbackSlot),
     "<template ",
-      ("is=\"{{ s_" + slotName + " || '" + fallbackSlotName + "' }}\" "),
+      ("is=\"{{s_" + slotName + "||'" + fallbackSlotName + "'}}\" "),
       "data=\"",
-        this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[ c ], " + ROOT_DATA_VAR + tail + scope + ", _c: c")),
+        this.wrapTemplateData(("..." + ROOT_DATA_VAR + "[c], " + ROOT_DATA_VAR + tail + scope + ", _c:c")),
       ("\"" + directives + "/>")
   ].join('')
 };
@@ -6479,7 +6480,7 @@ TemplateGenerator.prototype.genNativeSlotName = function genNativeSlotName (el) 
     return ''
   }
   var isDynamicSlot = !/"/.test(slotTarget);
-  var slotName = isDynamicSlot ? ("\"{{ " + (this.genHolder(el, 'slot')) + " }}\"") : slotTarget;
+  var slotName = isDynamicSlot ? ("\"{{" + (this.genHolder(el, 'slot')) + "}}\"") : slotTarget;
 
   return (" slot=" + slotName)
 };
@@ -6487,7 +6488,7 @@ TemplateGenerator.prototype.genNativeSlotName = function genNativeSlotName (el) 
 TemplateGenerator.prototype.genVText = function genVText (el) {
     if ( el === void 0 ) el = {};
 
-  return ("{{ " + (this.genHolder(el, 'vtext')) + " }}")
+  return ("{{" + (this.genHolder(el, 'vtext')) + "}}")
 };
 
 TemplateGenerator.prototype.isVHtml = function isVHtml (el) {
@@ -6603,7 +6604,7 @@ TemplateGenerator.prototype.isInSlotSnippet = function isInSlotSnippet () {
 // }
 
 TemplateGenerator.prototype.wrapTemplateData = function wrapTemplateData (str) {
-  return this.target === 'swan' ? ("{{{ " + str + " }}}") : ("{{ " + str + " }}")
+  return this.target === 'swan' ? ("{{{" + str + "}}}") : ("{{" + str + "}}")
 };
 
 TemplateGenerator.prototype.isTransformAssetUrl = function isTransformAssetUrl (node, name) {
