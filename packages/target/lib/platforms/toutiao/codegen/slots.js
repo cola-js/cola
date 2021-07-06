@@ -1,14 +1,8 @@
 module.exports = function ( { imports, bodies } ) {
-  let slotsOutput = ''
-  imports.forEach( im => {
-    slotsOutput = slotsOutput + `<import src="${ im }" />\n`
-  } )
-
-  slotsOutput = slotsOutput + `\n`
-
-  bodies.forEach( b => {
-    slotsOutput = slotsOutput + b + `\n\n`
-  } )
+  imports = Array.from(new Set(imports))
+  let slotsOutput = imports.map(im => `<import src="${ im }" />`).join(`\n`)
+  slotsOutput += `\n`
+  slotsOutput += bodies.join(`\n\n`)
 
   return slotsOutput
 }
