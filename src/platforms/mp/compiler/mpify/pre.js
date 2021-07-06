@@ -194,7 +194,7 @@ function walkIf (node, state) {
     conditions.forEach(condition => {
       const { block } = condition
       const noneTemplateBlock = findFirstNoneTemplateNode(block)
-      addAttr(noneTemplateBlock, 'i_', `[ ${conditions.__extratExpression.join(',')} ]`)
+      addAttr(noneTemplateBlock, 'i_', `[${conditions.__extratExpression.join(',')}]`)
     })
   }
 }

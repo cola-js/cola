@@ -139,32 +139,32 @@ export class TemplateGenerator {
       if (ifHolder) {
         return `s_${name}:${ifHolder}?'${slotName}':''`
       } else {
-        return `s_${name}: '${slotName}'`
+        return `s_${name}:'${slotName}'`
       }
     })
     let cid = c_
     let scope = ''
-    let tail = `, ${FOR_TAIL_VAR}: _t || ''`
+    let tail = `, ${FOR_TAIL_VAR}:_t||''`
 
     // if the component is in slot snippet, the slot scopeid is contained in PARENT_SCOPE_ID_VAR
     if (this.scopeId && !this.isInSlotSnippet()) {
-      scope = `,${PARENT_SCOPE_ID_VAR}:(${PARENT_SCOPE_ID_VAR}||'')+' ${this.scopeId}'`
+      scope = `, ${PARENT_SCOPE_ID_VAR}:(${PARENT_SCOPE_ID_VAR}||'')+'${this.scopeId}'`
     } else {
-      scope = `,${PARENT_SCOPE_ID_VAR}:${PARENT_SCOPE_ID_VAR}||''`
+      scope = `, ${PARENT_SCOPE_ID_VAR}:${PARENT_SCOPE_ID_VAR}||''`
     }
 
     // passing parent v-for tail to slot inside v-for
     // TODO: refactor
     if (isDef(f_)) {
-      cid = `${c_} + (_t || '') + ${sep} + ${f_}`
-      tail = `, ${FOR_TAIL_VAR}: (${FOR_TAIL_VAR} || '') + ${sep} + ${f_}`
+      cid = `${c_}+(_t||'')+${sep}+${f_}`
+      tail = `, ${FOR_TAIL_VAR}:(${FOR_TAIL_VAR}||'')+${sep}+${f_}`
     } else {
-      cid = `${c_} + (_t || '')`
-      tail = `, ${FOR_TAIL_VAR}: ${FOR_TAIL_VAR} || ''`
+      cid = `${c_}+(_t||'')`
+      tail = `, ${FOR_TAIL_VAR}:${FOR_TAIL_VAR}||''`
     }
 
     const data = [
-      `...${ROOT_DATA_VAR}[ ${VM_ID_PREFIX} + ${cid} ]`,
+      `...${ROOT_DATA_VAR}[${VM_ID_PREFIX}+${cid}]`,
       `${ROOT_DATA_VAR}`,
       ...slotsNames
     ].join(', ')
@@ -340,10 +340,10 @@ export class TemplateGenerator {
       klass.push(staticClass)
     }
     if (classBinding) {
-      klass.push(`{{ ${this.genHolder(el, 'class')} }}`)
+      klass.push(`{{${this.genHolder(el, 'class')}}}`)
     }
     if (h_ === '0') {
-      klass.push(`{{ ${this.genHolder(el, 'rootClass')} }}`)
+      klass.push(`{{${this.genHolder(el, 'rootClass')}}}`)
       // parent scope id class string only affect the root of a component
       klass.push(`{{${PARENT_SCOPE_ID_VAR}}}`)
     }
@@ -366,12 +366,12 @@ export class TemplateGenerator {
     const { styleBinding } = el
     let { staticStyle = '' } = el
     let style = []
-    staticStyle = staticStyle.replace(/"|{|}/g, '').split(',').join('; ')
+    staticStyle = staticStyle.replace(/"|{|}/g, '').split(',').join(';')
     if (staticStyle) {
       style.push(staticStyle)
     }
     if (styleBinding) {
-      style.push(`{{ ${this.genHolder(el, 'style')} }}`)
+      style.push(`{{${this.genHolder(el, 'style')}}}`)
     }
     style = style.filter(notEmpty).join('; ')
     return style ? ` style="${style}"` : ''
@@ -382,7 +382,7 @@ export class TemplateGenerator {
     if (!attrsMap['v-show']) {
       return ''
     }
-    return ` hidden="{{ ${this.genHolder(el, 'vshow')} }}"`
+    return ` hidden="{{${this.genHolder(el, 'vshow')}}}"`
   }
 
   genAttrs (el): string {
@@ -400,15 +400,15 @@ export class TemplateGenerator {
       ) {
         return ''
       } else if (vmodelReg.test(name)) {
-        return `value="{{ ${this.genHolder(el, 'value')} }}"`
+        return `value="{{${this.genHolder(el, 'value')}}}"`
       // <img :data-a="a" :src="img">
       } else if (vbindReg.test(name)) {
         const realName = name.replace(vbindReg, '')
         const camelizedName = camelize(realName)
-        return `${realName}="{{ ${this.genHolderVar()}[ ${this.genHid(el)} ].${camelizedName} }}"`
+        return `${realName}="{{${this.genHolderVar()}[${this.genHid(el)}].${camelizedName}}}"`
       // <img src="../assets/img.jpg">
       } else if (!/^https?|data:/.test(value) && this.isTransformAssetUrl(el, name)) {
-        return `${name}="{{ ${this.genHolderVar()}[ ${this.genHid(el)} ][ '${name}' ] }}"`
+        return `${name}="{{${this.genHolderVar()}[${this.genHid(el)}]['${name}']}}"`
       } else {
         return `${name}="${value}"`
       }
@@ -436,7 +436,7 @@ export class TemplateGenerator {
      * when the element is in a slot, it will recieve "_c" as the actual component instance id
      * othewise, using the current scope which usually the parent component in the template
      */
-    return ` data-cid="{{ _c || ${cid} }}" data-hid="{{ ${this.genHid(el)} }}" ${eventAttrs}`
+    return ` data-cid="{{_c||${cid}}}" data-hid="{{${this.genHid(el)}}}" ${eventAttrs}`
   }
 
   genIfConditions (el): string {
@@ -460,9 +460,9 @@ export class TemplateGenerator {
     const ELSE = this.directive('else')
 
     if (el.if) {
-      return ` ${IF}="{{ ${this.genHolder(el, 'if')} }}"`
+      return ` ${IF}="{{${this.genHolder(el, 'if')}}}"`
     } else if (el.elseif) {
-      return ` ${ELSE_IF}="{{ ${this.genHolder(el, 'if')} }}"`
+      return ` ${ELSE_IF}="{{${this.genHolder(el, 'if')}}}"`
     } else if (el.else) {
       return ` ${ELSE}`
     }
@@ -484,14 +484,14 @@ export class TemplateGenerator {
     if (this.isInSlotSnippet()) {
       forHolderId =
         isDef(forFid)
-          ? `${forHid} + (${FOR_TAIL_VAR} || '') + ${sep} + ${forFid}`
-          : `${forHid} + (${FOR_TAIL_VAR} || '')`
+          ? `${forHid}+(${FOR_TAIL_VAR}||'')+${sep}+${forFid}`
+          : `${forHid}+(${FOR_TAIL_VAR}||'')`
     } else {
-      forHolderId = isDef(forFid) ? `${forHid} + ${sep} + ${forFid}` : forHid
+      forHolderId = isDef(forFid) ? `${forHid}+${sep}+${forFid}` : forHid
     }
 
     const _for = [
-      ` ${FOR}="{{ ${this.genHolder(forHolderId, 'for')} }}"`,
+      ` ${FOR}="{{${this.genHolder(forHolderId, 'for')}}}"`,
       this.genForKey(el),
       alias ? ` ${FOR_ITEM}="${alias}"` : /* istanbul ignore next */ ''
     ]
@@ -539,9 +539,9 @@ export class TemplateGenerator {
 
     let scope = ''
     if (this.scopeId) {
-      scope = `,${PARENT_SCOPE_ID_VAR}:(${PARENT_SCOPE_ID_VAR}||'')+' ${this.scopeId}'`
+      scope = `, ${PARENT_SCOPE_ID_VAR}:(${PARENT_SCOPE_ID_VAR}||'')+'${this.scopeId}'`
     } else {
-      scope = `,${PARENT_SCOPE_ID_VAR}:${PARENT_SCOPE_ID_VAR}||''`
+      scope = `, ${PARENT_SCOPE_ID_VAR}:${PARENT_SCOPE_ID_VAR}||''`
     }
 
     const directives = [
@@ -561,18 +561,18 @@ export class TemplateGenerator {
         `${fallbackSlot}`,
         `<block s-if="s_${slotName}">`,
           `<template `,
-            `is="{{ s_${slotName} }}" `,
+            `is="{{s_${slotName}}}" `,
             `data="`,
-            this.wrapTemplateData(`...${ROOT_DATA_VAR}[ c ], ${ROOT_DATA_VAR}${tail}, _c: c`),
+            this.wrapTemplateData(`...${ROOT_DATA_VAR}[c], ${ROOT_DATA_VAR}${tail}, _c:c`),
           `"${directives}/>`,
         `</block>`,
 
         // else use default slot snippet
         `<block s-else>`,
           `<template `,
-            `is="{{ '${fallbackSlotName}' }}" `,
+            `is="{{'${fallbackSlotName}'}}" `,
             `data="`,
-              this.wrapTemplateData(`...${ROOT_DATA_VAR}[ c ], ${ROOT_DATA_VAR}${tail}, _c: c`),
+              this.wrapTemplateData(`...${ROOT_DATA_VAR}[c], ${ROOT_DATA_VAR}${tail}, _c:c`),
           `"${this.genFor(el)}/>`,
         `</block>`
       ].join('')
@@ -581,9 +581,9 @@ export class TemplateGenerator {
     return [
       `${fallbackSlot}`,
       `<template `,
-        `is="{{ s_${slotName} || '${fallbackSlotName}' }}" `,
+        `is="{{s_${slotName}||'${fallbackSlotName}'}}" `,
         `data="`,
-          this.wrapTemplateData(`...${ROOT_DATA_VAR}[ c ], ${ROOT_DATA_VAR}${tail}${scope}, _c: c`),
+          this.wrapTemplateData(`...${ROOT_DATA_VAR}[c], ${ROOT_DATA_VAR}${tail}${scope}, _c:c`),
         `"${directives}/>`
     ].join('')
   }
@@ -669,13 +669,13 @@ export class TemplateGenerator {
       return ''
     }
     const isDynamicSlot = !/"/.test(slotTarget)
-    const slotName = isDynamicSlot ? `"{{ ${this.genHolder(el, 'slot')} }}"` : slotTarget
+    const slotName = isDynamicSlot ? `"{{${this.genHolder(el, 'slot')}}}"` : slotTarget
 
     return ` slot=${slotName}`
   }
 
   genVText (el = {}): string {
-    return `{{ ${this.genHolder(el, 'vtext')} }}`
+    return `{{${this.genHolder(el, 'vtext')}}}`
   }
 
   isVHtml (el = {}): boolean {
@@ -783,7 +783,7 @@ export class TemplateGenerator {
   // }
 
   wrapTemplateData (str) {
-    return this.target === 'swan' ? `{{{ ${str} }}}` : `{{ ${str} }}`
+    return this.target === 'swan' ? `{{{${str}}}}` : `{{${str}}}`
   }
 
   isTransformAssetUrl (node, name) {
