@@ -65,6 +65,7 @@ export default {
 
   // 音视频
   'audio': 'audio',
+  'camera': 'camera',
   'source': 'audio',
   'video': 'video',
   'track': 'video',
