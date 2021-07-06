@@ -246,10 +246,6 @@ module.exports = function( {
       const SUBPACKAGE_SLOTS_OUTPATH = constants.SLOTS_OUTPUT_PATH
         .replace( /\[root\]/g, root ) + extensions.template
 
-      // add main slots import
-      const mainSlotsSrc = pathPrefix + MAIN_SLOTS_OUTPATH
-      content.push( generators.import.template( { src: mainSlotsSrc } ) )
-
       // add subpackage slots import
       if ( root && subpackageSlots[ root ] ) {
         const subpackageSlotsSrc = pathPrefix + SUBPACKAGE_SLOTS_OUTPATH
@@ -278,6 +274,10 @@ module.exports = function( {
           // emitError( compilation, `Cannot resolve ${ imp.resolved } as component` )
         }
       } )
+
+      // add main slots import
+      const mainSlotsSrc = pathPrefix + MAIN_SLOTS_OUTPATH
+      content.push( generators.import.template( { src: mainSlotsSrc } ) )
 
       content.push( body )
 
